@@ -19,13 +19,17 @@ ______________________________________________________________________
 
 > All installations are set up automatically in an out-of-the-box manner.
 
-Run the command below:
+Run the command below to install basic dependency packages:
 
 ```commandline
 git clone https://github.com/MIT-SPARK/KISS-Matcher.git
 cd KISS-Matcher
 make deps
 ```
+
+After that, follow the C++ or Python installation instructions below.
+
+---
 
 ### C++
 
