@@ -66,31 +66,27 @@ jobs:
           CIBW_ARCHS_LINUX: x86_64
           CIBW_ARCHS_MACOS: ${{ matrix.os == 'macos-14' && 'arm64' || 'x86_64' }}
           CIBW_SKIP: "*-musllinux*"
-          # manylinux_2_34 (AlmaLinux 9) ships oneTBB 2021+ providing
-          # libtbb.so.12 and TBBConfig.cmake under /usr/lib64. The older
-          # _2_28 (AlmaLinux 8) only had TBB 2018 (libtbb.so.2, no cmake
-          # configs), which is incompatible with KISS-Matcher's modern
-          # find_package(TBB CONFIG).
-          CIBW_MANYLINUX_X86_64_IMAGE: manylinux_2_34
+          # manylinux_2_28 (AlmaLinux 8) is the newest alias cibuildwheel v2.22
+          # natively supports. Its repos only ship TBB 2018, so we build oneTBB
+          # v2022 from source in CIBW_BEFORE_ALL_LINUX and install it to /usr.
+          CIBW_MANYLINUX_X86_64_IMAGE: manylinux_2_28
           CIBW_BEFORE_ALL_LINUX: |
             dnf install -y epel-release
-            dnf install -y eigen3-devel tbb-devel flann-devel lz4-devel
-          # Use system Eigen/TBB on both platforms — letting KISS-Matcher
-          # FetchContent oneTBB instead either fails on arm64 (oneTBB v2022
-          # source hardcodes -mrtm/-mwaitpkg x86 intrinsics) or leaves
-          # libtbb.so.12 in an ephemeral build dir that auditwheel cannot
-          # locate. ROBIN we always fetch (no system package exists yet).
-          CIBW_ENVIRONMENT_LINUX: >-
-            CMAKE_ARGS=-DUSE_SYSTEM_EIGEN3=ON
-            -DUSE_SYSTEM_TBB=ON
-            -DUSE_SYSTEM_ROBIN=OFF
-          CIBW_ENVIRONMENT_MACOS: >-
-            CMAKE_PREFIX_PATH=$(brew --prefix)
-            CC=${{ env.CC }}
-            CXX=${{ env.CXX }}
-            CMAKE_ARGS=-DUSE_SYSTEM_EIGEN3=ON
-            -DUSE_SYSTEM_TBB=ON
-            -DUSE_SYSTEM_ROBIN=OFF
+            dnf install -y eigen3-devel flann-devel lz4-devel git cmake gcc-c++
+            git clone --depth 1 --branch v2022.0.0 \
+              https://github.com/oneapi-src/oneTBB.git /tmp/oneTBB
+            cmake -S /tmp/oneTBB -B /tmp/oneTBB/build \
+              -DCMAKE_BUILD_TYPE=Release \
+              -DCMAKE_INSTALL_PREFIX=/usr \
+              -DCMAKE_INSTALL_LIBDIR=lib64 \
+              -DTBB_TEST=OFF -DTBB_EXAMPLES=OFF -DTBB_STRICT=OFF
+            cmake --build /tmp/oneTBB/build -j
+            cmake --install /tmp/oneTBB/build
+          # CIBW_ENVIRONMENT uses shell-like parsing — without the explicit
+          # double quotes, the YAML folded scalar collapses to a single line
+          # and cibuildwheel only picks up the first -D flag of CMAKE_ARGS.
+          CIBW_ENVIRONMENT_LINUX: 'CMAKE_ARGS="-DUSE_SYSTEM_EIGEN3=ON -DUSE_SYSTEM_TBB=ON -DUSE_SYSTEM_ROBIN=OFF"'
+          CIBW_ENVIRONMENT_MACOS: 'CMAKE_PREFIX_PATH="$(brew --prefix)" CC="${{ env.CC }}" CXX="${{ env.CXX }}" CMAKE_ARGS="-DUSE_SYSTEM_EIGEN3=ON -DUSE_SYSTEM_TBB=ON -DUSE_SYSTEM_ROBIN=OFF"'
         with:
           package-dir: ${{ github.workspace }}/python/
 
