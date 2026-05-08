@@ -66,16 +66,31 @@ jobs:
           CIBW_ARCHS_LINUX: x86_64
           CIBW_ARCHS_MACOS: ${{ matrix.os == 'macos-14' && 'arm64' || 'x86_64' }}
           CIBW_SKIP: "*-musllinux*"
-          # manylinux_2_28 ships gcc-toolset 12 (modern OpenMP, std::atomic_ref
-          # available) and has Eigen3/TBB/flann/lz4 in dnf.
-          CIBW_MANYLINUX_X86_64_IMAGE: manylinux_2_28
+          # manylinux_2_34 (AlmaLinux 9) ships oneTBB 2021+ providing
+          # libtbb.so.12 and TBBConfig.cmake under /usr/lib64. The older
+          # _2_28 (AlmaLinux 8) only had TBB 2018 (libtbb.so.2, no cmake
+          # configs), which is incompatible with KISS-Matcher's modern
+          # find_package(TBB CONFIG).
+          CIBW_MANYLINUX_X86_64_IMAGE: manylinux_2_34
           CIBW_BEFORE_ALL_LINUX: |
             dnf install -y epel-release
             dnf install -y eigen3-devel tbb-devel flann-devel lz4-devel
+          # Use system Eigen/TBB on both platforms — letting KISS-Matcher
+          # FetchContent oneTBB instead either fails on arm64 (oneTBB v2022
+          # source hardcodes -mrtm/-mwaitpkg x86 intrinsics) or leaves
+          # libtbb.so.12 in an ephemeral build dir that auditwheel cannot
+          # locate. ROBIN we always fetch (no system package exists yet).
+          CIBW_ENVIRONMENT_LINUX: >-
+            CMAKE_ARGS=-DUSE_SYSTEM_EIGEN3=ON
+            -DUSE_SYSTEM_TBB=ON
+            -DUSE_SYSTEM_ROBIN=OFF
           CIBW_ENVIRONMENT_MACOS: >-
             CMAKE_PREFIX_PATH=$(brew --prefix)
             CC=${{ env.CC }}
             CXX=${{ env.CXX }}
+            CMAKE_ARGS=-DUSE_SYSTEM_EIGEN3=ON
+            -DUSE_SYSTEM_TBB=ON
+            -DUSE_SYSTEM_ROBIN=OFF
         with:
           package-dir: ${{ github.workspace }}/python/
 
