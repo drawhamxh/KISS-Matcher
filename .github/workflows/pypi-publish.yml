@@ -38,11 +38,13 @@ jobs:
       matrix:
         # Linux wheels: manylinux x86_64 (cibuildwheel runs inside the
         #   container and yum-installs the system deps below).
-        # macOS: arm64 (macos-14) and x86_64 (macos-13) host-native builds
-        #   with the Homebrew LLVM toolchain (AppleClang has no OpenMP).
+        # macOS: arm64 only (macos-14). macos-13 (Intel) is intentionally
+        #   omitted — GitHub's macos-13 hosted runners are being phased out
+        #   and routinely sit in the queue for many hours, blocking the
+        #   release pipeline. Intel-Mac users can install from sdist.
         # Windows is not yet supported (ROBIN's src/pkc.cpp uses GCC builtin
         #   atomics + size_t OpenMP for indices that MSVC OpenMP 2.0 rejects).
-        os: [ubuntu-22.04, macos-13, macos-14]
+        os: [ubuntu-22.04, macos-14]
 
     steps:
       - uses: actions/checkout@v4
