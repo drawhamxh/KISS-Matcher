@@ -3,8 +3,12 @@
     <a href="https://github.com/MIT-SPARK/KISS-Matcher"><img src="https://img.shields.io/badge/-C++-blue?logo=cplusplus" /></a>
     <a href="https://github.com/MIT-SPARK/KISS-Matcher"><img src="https://img.shields.io/badge/Python-3670A0?logo=python&logoColor=ffdd54" /></a>
     <a href="https://github.com/MIT-SPARK/KISS-Matcher"><img src="https://img.shields.io/badge/ROS2-Humble-blue" /></a>
-    <a href="https://github.com/MIT-SPARK/KISS-Matcher"><img src="https://img.shields.io/badge/Linux-FCC624?logo=linux&logoColor=black" /></a>
+    <a href="https://github.com/MIT-SPARK/KISS-Matcher"><img src="https://img.shields.io/badge/Ubuntu-E95420?logo=ubuntu&logoColor=white" /></a>
+    <a href="https://github.com/MIT-SPARK/KISS-Matcher"><img src="https://img.shields.io/badge/macOS-000000?logo=apple&logoColor=white" /></a>
     <a href="https://arxiv.org/abs/2409.15615"><img src="https://img.shields.io/badge/arXiv-b33737?logo=arXiv" /></a>
+    <br />
+    <a href="https://github.com/MIT-SPARK/KISS-Matcher/actions/workflows/ci-cpp.yml"><img src="https://github.com/MIT-SPARK/KISS-Matcher/actions/workflows/ci-cpp.yml/badge.svg?branch=main" alt="C++ Core Build" /></a>
+    <a href="https://github.com/MIT-SPARK/KISS-Matcher/actions/workflows/ci-python.yml"><img src="https://github.com/MIT-SPARK/KISS-Matcher/actions/workflows/ci-python.yml/badge.svg?branch=main" alt="Python Build" /></a>
     <br />
     <br />
   <br />
