@@ -32,8 +32,14 @@ classifiers = [
 
 dependencies = [
   "numpy",
-  "viser",
 ]
+
+[project.optional-dependencies]
+# `viser` is only used by examples/run_kiss_matcher.py for 3D visualization.
+# It pulls in trimesh, scipy, networkx, shapely, embreex, etc. — heavy and
+# unnecessary for the core registration API. Install with the `viz` extra
+# when running the visualization demo: `pip install kiss-matcher[viz]`.
+viz = ["viser"]
 
 [tool.scikit-build]
 wheel.packages = ["kiss_matcher"]
