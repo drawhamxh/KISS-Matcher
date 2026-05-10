@@ -169,7 +169,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-14, macos-13]
+        # macos-13 (Intel) is omitted: GitHub's hosted macos-13 runners are
+        # being phased out and queue for many hours, blocking CI. Apple
+        # Silicon (macos-14) covers the macOS path we actively ship.
+        os: [macos-14]
 
     # Homebrew on the macOS runners ships CMake 4.x, which hard-errors on
     # legacy `cmake_minimum_required(VERSION 2.x)` in transitive deps
