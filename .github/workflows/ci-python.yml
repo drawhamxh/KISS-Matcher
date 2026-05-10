@@ -208,7 +208,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-14, macos-13]
+        # macos-13 (Intel) is omitted: GitHub's hosted macos-13 runners are
+        # being phased out and queue for many hours, blocking CI. Apple
+        # Silicon (macos-14) covers the macOS path we actively ship.
+        os: [macos-14]
         python-version: ['3.10', '3.12']
 
     # See ci-cpp.yml for why this env is set on the macOS jobs.
@@ -300,7 +303,7 @@ jobs:
             echo "✅ All Python builds completed successfully" >> $GITHUB_STEP_SUMMARY
             echo "" >> $GITHUB_STEP_SUMMARY
             echo "### Tested Configurations:" >> $GITHUB_STEP_SUMMARY
-            echo "- **Operating Systems**: Ubuntu 20.04 (container), Ubuntu 22.04, Ubuntu 24.04, macOS 13 (Intel), macOS 14 (Apple Silicon)" >> $GITHUB_STEP_SUMMARY
+            echo "- **Operating Systems**: Ubuntu 20.04 (container), Ubuntu 22.04, Ubuntu 24.04, macOS 14 (Apple Silicon)" >> $GITHUB_STEP_SUMMARY
             echo "- **Python Versions**: 3.8, 3.9, 3.10, 3.11, 3.12 (Linux); 3.10, 3.12 (macOS)" >> $GITHUB_STEP_SUMMARY
             echo "- **Compilers**: GCC 9 (Ubuntu 20.04), GCC 11 (Ubuntu 22.04), GCC 13 (Ubuntu 24.04), Homebrew LLVM clang (macOS)" >> $GITHUB_STEP_SUMMARY
             echo "" >> $GITHUB_STEP_SUMMARY
