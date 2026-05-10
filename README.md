@@ -116,16 +116,39 @@ ______________________________________________________________________
 
 ### Python
 
-The prerequisites for Pybind11 are just the minimum requirements as follows:"
+Install from PyPI (Linux x86_64 manylinux_2_28+, macOS 14+ arm64; sdist build elsewhere):
 
-```
-pip3 install --upgrade pip setuptools wheel scikit-build-core ninja cmake build
+```bash
+pip install kiss-matcher           # core only (numpy)
+pip install kiss-matcher[viz]      # adds viser for the visualization demo
 ```
 
-And then, run the following command:
+Or install editably from a source checkout:
 
+```bash
+pip install --upgrade pip setuptools wheel scikit-build-core ninja cmake build
+pip install -e python/
 ```
-pip3 install -e python/
+
+#### Quickstart
+
+After installing, run the synthetic-data smoke test (no external data, no viser):
+
+```bash
+python python/examples/quickstart.py
+```
+
+It generates 5k random points, applies a known rigid transform, and prints the
+recovered rotation/translation errors. Expect sub-degree rotation error and
+sub-centimetre translation error.
+
+For real point clouds with 3D visualization (requires `[viz]` extra):
+
+```bash
+python python/examples/run_kiss_matcher.py \
+    --src_path /path/to/src.pcd \
+    --tgt_path /path/to/tgt.pcd \
+    --resolution 0.3
 ```
 
 We also provide out-of-the-box python registration examples. Go to [**python**](https://github.com/MIT-SPARK/KISS-Matcher/tree/main/python) directory and follow the instructions.
