@@ -76,7 +76,7 @@ make cppinstall
 > ```
 
 <details>
-  <summary><strong>Q. How doest it work?</a></strong></summary>
+  <summary><strong>Q. How does it work?</a></strong></summary>
 
 The `cppinstall` command is encapsulated in the [Makefile](https://github.com/MIT-SPARK/KISS-Matcher/blob/main/Makefile). and `cppinstall` calls `deps` to automatically install the dependencies.
 In addition, KISS-Matcher requires [ROBIN](https://github.com/MIT-SPARK/ROBIN).
